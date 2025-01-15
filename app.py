@@ -8,7 +8,7 @@ from docx import Document
 import pandas as pd
 
 # Set OpenAI API key
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+openai.api_key = st.secrets["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"]
 
 # Function to load training data from training.txt
 def load_training_data(file_path):
