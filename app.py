@@ -82,7 +82,27 @@ training_file = "training.txt"
 training_data = load_training_data(training_file)
 
 # User input
-user_input = st.text_input("Ask me a question:")
+user_input = st.text_input("Ask me a question:", key="user_input")
+
+# Check if Enter is pressed or Submit button is clicked
+if user_input:
+    try:
+        if user_input in training_data:
+            response = training_data[user_input]
+        else:
+            completion = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": user_input}
+                ]
+            )
+            response = completion["choices"][0]["message"]["content"]
+    except Exception as e:
+        response = f"Error calling OpenAI API: {e}"
+
+    # Display the response
+    st.text_area("Response:", value=response, height=150)
 
 # File upload
 uploaded_file = st.file_uploader("Upload a file (PDF, Word, Excel):", type=["pdf", "docx", "xlsx"])
