@@ -81,33 +81,9 @@ This chatbot is designed to:
 training_file = "training.txt"
 training_data = load_training_data(training_file)
 
-# User input
-user_input = st.text_input("Ask me a question:")
-
-# Submit button
-if st.button("Submit") and user_input:
-    try:
-        if user_input in training_data:
-            response = training_data[user_input]
-        else:
-            completion = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": user_input}
-                ]
-            )
-            response = completion["choices"][0]["message"]["content"]
-    except Exception as e:
-        response = f"Error calling OpenAI API: {e}"
-
-    # Display the response
-    st.text_area("Response:", value=response, height=150)
-
-# File upload
-uploaded_file = st.file_uploader("Upload a file (PDF, Word, Excel):", type=["pdf", "docx", "xlsx"])
-
-if st.button("Submit"):
+# User input and submission
+user_input = st.text_input("Ask me a question:", key="user_input")
+if st.button("Submit") or user_input:
     if user_input:
         try:
             if user_input in training_data:
@@ -124,18 +100,21 @@ if st.button("Submit"):
         except Exception as e:
             response = f"Error calling OpenAI API: {e}"
 
+        # Display the response
         st.text_area("Response:", value=response, height=150)
 
-    if uploaded_file:
-        file_type = uploaded_file.name.split(".")[-1].lower()
-        try:
-            if file_type == "pdf":
-                file_content = process_pdf(uploaded_file)
-            elif file_type == "docx":
-                file_content = process_word(uploaded_file)
-            elif file_type == "xlsx":
-                file_content = process_excel(uploaded_file)
-                file_content = "\n".join([f"Sheet: {sheet}, Data: {data}" for sheet, data in file_content.items()])
-            st.text_area("File Content:", value=file_content, height=300)
-        except Exception as e:
-            st.error(f"Error processing file: {e}")
+# File upload and processing
+uploaded_file = st.file_uploader("Upload a file (PDF, Word, Excel):", type=["pdf", "docx", "xlsx"])
+if uploaded_file:
+    file_type = uploaded_file.name.split(".")[-1].lower()
+    try:
+        if file_type == "pdf":
+            file_content = process_pdf(uploaded_file)
+        elif file_type == "docx":
+            file_content = process_word(uploaded_file)
+        elif file_type == "xlsx":
+            file_content = process_excel(uploaded_file)
+            file_content = "\n".join([f"Sheet: {sheet}, Data: {data}" for sheet, data in file_content.items()])
+        st.text_area("File Content:", value=file_content, height=300)
+    except Exception as e:
+        st.error(f"Error processing file: {e}")
