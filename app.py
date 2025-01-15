@@ -89,14 +89,14 @@ if st.button("Submit") or user_input:
             if user_input in training_data:
                 response = training_data[user_input]
             else:
-                completion = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=[
-                        {"role": "system", "content": "You are a helpful assistant."},
-                        {"role": "user", "content": user_input}
-                    ]
-                )
-                response = completion["choices"][0]["message"]["content"]
+               completion = openai.Chat.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": user_input}
+    ]
+)
+response = completion.choices[0].message["content"]
         except Exception as e:
             response = f"Error calling OpenAI API: {e}"
 
