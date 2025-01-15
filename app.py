@@ -97,14 +97,17 @@ if st.button("Submit"):
         else:
             # Use GPT-3.5 for custom questions
             try:
-               completion = openai.Chat.create(
-    model="gpt-3.5-turbo",
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": user_input}
-    ]
-)
-response = completion.choices[0].message["content"]
+         try:
+    completion = openai.Chat.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": user_input}
+        ]
+    )
+    response = completion["choices"][0]["message"]["content"]
+except Exception as e:
+    response = f"Error calling OpenAI API: {e}"
             except Exception as e:
                 response = f"Error calling OpenAI API: {e}"
 
