@@ -82,10 +82,10 @@ training_file = "training.txt"
 training_data = load_training_data(training_file)
 
 # User input
-user_input = st.text_input("Ask me a question:", key="user_input")
+user_input = st.text_input("Ask me a question:")
 
-# Check if Enter is pressed or Submit button is clicked
-if user_input:
+# Submit button
+if st.button("Submit") and user_input:
     try:
         if user_input in training_data:
             response = training_data[user_input]
