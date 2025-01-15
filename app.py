@@ -92,20 +92,21 @@ if st.button("Submit"):
         response = ""
 
         # Check if question exists in training data
-        if user_input in training_data:
-            response = training_data[user_input]
-        else:
-            # Use GPT-3.5 for custom questions
-            try:
-         try:
-    completion = openai.Chat.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": user_input}
-        ]
-    )
-    response = completion["choices"][0]["message"]["content"]
+       if user_input:
+    try:
+        completion = openai.Chat.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": user_input}
+            ]
+        )
+        response = completion["choices"][0]["message"]["content"]
+    except Exception as e:
+        response = f"Error calling OpenAI API: {e}"
+
+    # Hiển thị phản hồi
+    st.text_area("Response:", value=response, height=150)
 except Exception as e:
     response = f"Error calling OpenAI API: {e}"
             except Exception as e:
