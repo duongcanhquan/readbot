@@ -89,37 +89,25 @@ uploaded_file = st.file_uploader("Upload a file (PDF, Word, Excel):", type=["pdf
 
 if st.button("Submit"):
     if user_input:
-        response = ""
+        try:
+            if user_input in training_data:
+                response = training_data[user_input]
+            else:
+                completion = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": user_input}
+                    ]
+                )
+                response = completion["choices"][0]["message"]["content"]
+        except Exception as e:
+            response = f"Error calling OpenAI API: {e}"
 
-        # Check if question exists in training data
-       if user_input:
-    try:
-        completion = openai.Chat.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": user_input}
-            ]
-        )
-        response = completion["choices"][0]["message"]["content"]
-    except Exception as e:
-        response = f"Error calling OpenAI API: {e}"
-
-    # Hiển thị phản hồi
-    st.text_area("Response:", value=response, height=150)
-except Exception as e:
-    response = f"Error calling OpenAI API: {e}"
-            except Exception as e:
-                response = f"Error calling OpenAI API: {e}"
-
-        # Display response
         st.text_area("Response:", value=response, height=150)
 
-    # Process uploaded file
     if uploaded_file:
         file_type = uploaded_file.name.split(".")[-1].lower()
-        file_content = ""
-
         try:
             if file_type == "pdf":
                 file_content = process_pdf(uploaded_file)
