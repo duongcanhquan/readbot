@@ -9,7 +9,7 @@ import pandas as pd
 
 # Set OpenAI API key
 try:
-    openai.api_key = st.secrets["OPENAI_API_KEY"]
+    openai.api_key = .streamlit/secrets["OPENAI_API_KEY"]
 except KeyError:
     st.error("API Key for OpenAI is missing. Please configure it in the secrets.")
 
